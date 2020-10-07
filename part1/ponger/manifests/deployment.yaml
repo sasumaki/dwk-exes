@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ponger-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ponger-app
+  template:
+    metadata:
+      labels:
+        app: ponger-app
+    spec:
+      volumes: # Define volume
+          - name: shared-volume
+            persistentVolumeClaim:
+              claimName: volume-claim
+      containers:
+        - name: ponger-app
+          image: sasumaki/ponger:4
+          volumeMounts: # Mount volume
+            - name: shared-volume
+              mountPath: /go/src/app/files

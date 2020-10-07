@@ -1,0 +1,12 @@
+
+<h1>Todos</h1>
+<ul>
+  {{range .Todos}}
+        <li>{{.Title}}</li>
+  {{end}}
+</ul>    
+<form method="POST">
+    <label>Todo:</label><br />
+    <input type="text" name="todo"><br />
+    <input type="submit">
+</form>
