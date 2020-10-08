@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ponger-svc
-  namespace: exercises-namespace
+  name: todo-api-svc
+  namespace: todo-namespace
 
 spec:
   type: ClusterIP
   selector:
-    app: ponger-app
+    app: crud-app
   ports:
     - name: http
       protocol: TCP

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ponger-dep
+  namespace: exercises-namespace
 spec:
   replicas: 1
   selector:
@@ -14,4 +15,7 @@ spec:
     spec:
       containers:
         - name: ponger-app
-          image: sasumaki/ponger:269F72C1-9D92-4451-80D4-884EBE62CD7E
+          image: sasumaki/ponger:BB87B65D-39B1-49BA-A854-8F13CDCE55C7
+          envFrom:
+          - configMapRef:
+              name: postgres-config

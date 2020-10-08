@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hashemitter-dep
+  namespace: exercises-namespace
 spec:
   replicas: 1
   selector:
@@ -15,16 +16,20 @@ spec:
       volumes: # Define volume
         - name: shared-volume
           persistentVolumeClaim:
-            claimName: volume-claim      
+            claimName: volume-claim     
       containers:
         - name: reader
-          image: sasumaki/reader:76F0AA4A-138C-450C-BF65-F8FECE3AEE7C
+          image: sasumaki/reader:19FE4935-D56C-4FC6-A4F1-642FBE729720
+          envFrom:
+          - configMapRef:
+              name: lol-config
           volumeMounts: # Mount volume
           - name: shared-volume
             mountPath: /go/src/app/files
+          
   
         - name: hashemitter
-          image: sasumaki/hashemitter:76F0AA4A-138C-450C-BF65-F8FECE3AEE7C
+          image: sasumaki/hashemitter:19FE4935-D56C-4FC6-A4F1-642FBE729720
           volumeMounts: # Mount volume
           - name: shared-volume
             mountPath: /go/src/app/files

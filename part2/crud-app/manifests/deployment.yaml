@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: crud-dep
+  namespace: todo-namespace
 spec:
   replicas: 1
   selector:
@@ -12,13 +13,22 @@ spec:
       labels:
         app: crud-app
     spec:
-      volumes: # Define volume
-          - name: shared-volume
-            persistentVolumeClaim:
-              claimName: volume-claim
+      # volumes: # Define volume
+      #     - name: shared-volume
+      #       persistentVolumeClaim:
+      #         claimName: volume-claim
       containers:
-        - name: crud-app
-          image: sasumaki/crud-app:10
-          volumeMounts: # Mount volume
-            - name: shared-volume
-              mountPath: /go/src/app/files
+        - name: htmler
+          image: sasumaki/htmler:9075D4B4-0B4A-44DC-9FE7-595813A92EC5
+          # volumeMounts: # Mount volume
+          #   - name: shared-volume
+          #     mountPath: /go/src/app/files
+        
+        - name: backend
+          image: sasumaki/backend:9075D4B4-0B4A-44DC-9FE7-595813A92EC5
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          # volumeMounts: # Mount volume
+          #   - name: shared-volume
+          #     mountPath: /go/src/app/files

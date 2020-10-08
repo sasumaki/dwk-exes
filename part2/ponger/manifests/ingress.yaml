@@ -2,12 +2,15 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: ponger-ingress
+  namespace: exercises-namespace
 
+  annotations:
+      traefik.ingress.kubernetes.io/rule-type: "PathPrefixStrip"
 spec:
   rules:
   - http:
       paths:
-      - path: /
+      - path: /ponger
         backend:
           serviceName: ponger-svc
           servicePort: 2346

@@ -2,10 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hashgenerator-svc
+  namespace: exercises-namespace
+
 spec:
   type: ClusterIP
   selector:
-    app: hashgenerator
+    app: hashemitter
   ports:
     - port: 2346
       protocol: TCP

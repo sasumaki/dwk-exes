@@ -3,11 +3,13 @@ package main
 import (
 	"bytes"
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"html/template"
 	"image/jpeg"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -27,30 +29,54 @@ type Todo struct {
 	Done  bool
 }
 
-func todos(w http.ResponseWriter, r *http.Request) {
-	data := TodoPageData{
-		Todos: []Todo{
-			{Title: "Task 1", Done: false},
-			{Title: "Task 2", Done: true},
-			{Title: "Task 3", Done: true},
-		},
-	}
+func todosRequest(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("forms.html"))
+	var todos []Todo
 
 	if r.Method != http.MethodPost {
-		fmt.Println("this weird shit")
-		tmpl.Execute(w, data)
-		return
-	}
-	fmt.Println("???")
-	details := TodoForm{
-		Todo: r.FormValue("todo"),
-	}
+		fmt.Println("GET")
+		res, err := http.Get("http://todo-api-svc/api/todos/")
+		if err != nil {
+			panic(err)
+		}
+		defer res.Body.Close()
+		body, err := ioutil.ReadAll(res.Body)
+		fmt.Println(body)
+		fmt.Println("json parsed: ")
+		err = json.Unmarshal([]byte(body), &todos)
+		fmt.Println(todos)
+		if err != nil {
+			fmt.Println("error:", err)
+		}
+	} else {
+		fmt.Println("POST")
 
-	// do something with details
-	_ = details
+		fmt.Println("new todo", Todo{
+			Title: r.FormValue("todo"),
+			Done:  false,
+		})
+		postJson, err := json.Marshal(Todo{
+			Title: r.FormValue("todo"),
+		})
+		if err != nil {
+			fmt.Println("error:", err)
+		}
+		res, err := http.Post("http://todo-api-svc/api/todos/", "application/json", bytes.NewBuffer(postJson))
+		if err != nil {
+			panic(err)
+		}
+		defer res.Body.Close()
+		body, err := ioutil.ReadAll(res.Body)
+		fmt.Println(body)
+		err = json.Unmarshal([]byte(body), &todos)
+		fmt.Println("todoos")
+		fmt.Println(todos)
 
-	tmpl.Execute(w, details)
+	}
+	data := TodoPageData{
+		Todos: todos,
+	}
+	tmpl.Execute(w, data)
 
 }
 
@@ -110,7 +136,7 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/view/", viewHandler).Methods("GET")
-	router.HandleFunc("/todos/", todos).Methods("GET", "POST")
+	router.HandleFunc("/todos/", todosRequest).Methods("GET", "POST")
 	port := "8080"
 	fmt.Println("Server starting in port", port)
 	http.ListenAndServe(":"+port, router)
