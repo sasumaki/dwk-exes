@@ -5,7 +5,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: hashgenerator-app
+    app: hashgenerator
   ports:
     - port: 2346
       protocol: TCP

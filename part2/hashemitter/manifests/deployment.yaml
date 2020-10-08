@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hashemitter-app
+      app: hashemitter
   template:
     metadata:
       labels:
-        app: hashemitter-app
+        app: hashemitter
     spec:
       volumes: # Define volume
         - name: shared-volume
@@ -18,13 +18,13 @@ spec:
             claimName: volume-claim      
       containers:
         - name: reader
-          image: sasumaki/reader:E7B8F693-A647-40A8-A70A-323CD73D33E9
+          image: sasumaki/reader:76F0AA4A-138C-450C-BF65-F8FECE3AEE7C
           volumeMounts: # Mount volume
           - name: shared-volume
             mountPath: /go/src/app/files
   
         - name: hashemitter
-          image: sasumaki/hashemitter:E7B8F693-A647-40A8-A70A-323CD73D33E9
+          image: sasumaki/hashemitter:76F0AA4A-138C-450C-BF65-F8FECE3AEE7C
           volumeMounts: # Mount volume
           - name: shared-volume
             mountPath: /go/src/app/files
