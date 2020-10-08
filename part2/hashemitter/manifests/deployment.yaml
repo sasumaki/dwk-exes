@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hashemitter-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hashemitter-app
+  template:
+    metadata:
+      labels:
+        app: hashemitter-app
+    spec:
+      volumes: # Define volume
+        - name: shared-volume
+          persistentVolumeClaim:
+            claimName: volume-claim      
+      containers:
+        - name: reader
+          image: sasumaki/reader:E7B8F693-A647-40A8-A70A-323CD73D33E9
+          volumeMounts: # Mount volume
+          - name: shared-volume
+            mountPath: /go/src/app/files
+  
+        - name: hashemitter
+          image: sasumaki/hashemitter:E7B8F693-A647-40A8-A70A-323CD73D33E9
+          volumeMounts: # Mount volume
+          - name: shared-volume
+            mountPath: /go/src/app/files

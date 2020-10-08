@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ponger-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ponger-app
+  template:
+    metadata:
+      labels:
+        app: ponger-app
+    spec:
+      containers:
+        - name: ponger-app
+          image: sasumaki/ponger:269F72C1-9D92-4451-80D4-884EBE62CD7E
