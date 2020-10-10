@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crud-dep
+  namespace: todo-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crud-app
+  # strategy: 
+  #   canary:
+  #     steps:
+  #     - setWeight: 100
+  #     - analysis:
+  #         templates:
+  #         - templateName: restart-rate
+  template:
+    metadata:
+      labels:
+        app: crud-app
+    spec:
+      containers:
+        - name: htmler
+          image: sasumaki/htmler:FFE675DE-CB3A-4110-AB06-D9F683A2019A
+          # readinessProbe:
+          #   initialDelaySeconds: 10 # Initial delay until the readiness is tested
+          #   periodSeconds: 5 # How often to test
+          #   httpGet:
+          #     path: /health
+          #     port: 8080
+          # livenessProbe:
+          #   initialDelaySeconds: 20 # Initial delay until the liveness is tested
+          #   periodSeconds: 5 # How often to test
+          #   httpGet:
+          #     path: /health
+          #     port: 8080
+        - name: backend
+          image: sasumaki/backend:FFE675DE-CB3A-4110-AB06-D9F683A2019A
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          env:
+            - name: NATS_URL
+              value: nats://my-nats:4222
+
+          readinessProbe:
+            initialDelaySeconds: 10 # Initial delay until the readiness is tested
+            periodSeconds: 5 # How often to test
+            httpGet:
+              path: /health
+              port: 3000
+          livenessProbe:
+            initialDelaySeconds: 20 # Initial delay until the liveness is tested
+            periodSeconds: 5 # How often to test
+            httpGet:
+              path: /health
+              port: 3000
+
+        - name: broadcaster
+          image: sasumaki/broadcaster:FFE675DE-CB3A-4110-AB06-D9F683A2019A
+          env:
+            - name: NATS_URL
+              value: nats://my-nats:4222
+
+        - name: broadcaster2
+          image: sasumaki/broadcaster:FFE675DE-CB3A-4110-AB06-D9F683A2019A
+          env:
+            - name: NATS_URL
+              value: nats://my-nats:4222
+              
+        - name: broadcaster3
+          image: sasumaki/broadcaster:FFE675DE-CB3A-4110-AB06-D9F683A2019A
+          env:
+            - name: NATS_URL
+              value: nats://my-nats:4222
+
+

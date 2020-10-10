@@ -1,0 +1,38 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-ss
+  namespace: exercises-namespace
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          ports:
+            - name: web
+              containerPort: 5432
+          volumeMounts:
+            - name: pgdata
+              mountPath: /pgdata
+  volumeClaimTemplates:
+    - metadata:
+        name: pgdata
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 100Mi

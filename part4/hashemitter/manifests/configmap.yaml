@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lol-config
+  namespace: exercises-namespace
+
+data:
+  MESSAGE: Hello 

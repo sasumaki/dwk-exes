@@ -19,17 +19,23 @@ spec:
             claimName: volume-claim     
       containers:
         - name: reader
-          image: sasumaki/reader:83BEA28A-631F-40DA-96B2-8CC14FFB2265
+          image: sasumaki/reader:538DA5BC-6317-4391-B8E4-8331A36FDB96
           envFrom:
           - configMapRef:
               name: lol-config
           volumeMounts: # Mount volume
           - name: shared-volume
             mountPath: /go/src/app/files
+          readinessProbe:
+            initialDelaySeconds: 10 # Initial delay until the readiness is tested
+            periodSeconds: 5 # How often to test
+            httpGet:
+               path: /health
+               port: 8081
           
   
         - name: hashemitter
-          image: sasumaki/hashemitter:83BEA28A-631F-40DA-96B2-8CC14FFB2265
+          image: sasumaki/hashemitter:538DA5BC-6317-4391-B8E4-8331A36FDB96
           volumeMounts: # Mount volume
           - name: shared-volume
             mountPath: /go/src/app/files

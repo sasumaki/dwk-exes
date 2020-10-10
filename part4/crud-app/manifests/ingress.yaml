@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: crud-ingress
+  namespace: todo-namespace
+  annotations:
+      traefik.ingress.kubernetes.io/rule-type: "PathPrefixStrip"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /todoapp
+        backend:
+          serviceName: crud-svc
+          servicePort: 2345

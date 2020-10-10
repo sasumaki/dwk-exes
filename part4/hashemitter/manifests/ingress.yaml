@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hashemitter-ingress
+  namespace: exercises-namespace
+  annotations:
+    traefik.ingress.kubernetes.io/rule-type: "PathPrefixStrip"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /hashes
+        backend:
+          serviceName: hashgenerator-svc
+          servicePort: 2346

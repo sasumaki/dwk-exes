@@ -1,0 +1,23 @@
+
+<h1>Todos</h1>
+<ul>
+  {{range .Todos}}
+        <li>{{.Title}}</li>
+        {{if .Done }}
+        <p>DONED</p>
+        {{ else }}
+        <button id={{.Title}} onclick="todo_click(this.id)" >MARK DONE</button>
+        {{end}}
+  {{end}}
+</ul>    
+<form method="POST">
+    <label>Todo:</label><br />
+    <input type="text" name="todo"><br />
+    <input type="submit">
+</form>
+<script type="text/javascript">
+  function todo_click(clicked_id)
+  {
+      fetch(window.location.origin + "/todoapp/todos/" + clicked_id)
+  }
+</script>
