@@ -1,0 +1,9 @@
+apiVersion: stable.dwk.my.domain/v1
+kind: DummySite
+metadata:
+  name: iltalehti
+spec:
+  website_url: https://iltalehti.fi
+  image: sasumaki/scraper:2
+status:
+  status: undone

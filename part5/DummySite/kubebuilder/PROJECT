@@ -1,0 +1,7 @@
+domain: my.domain
+repo: controller
+resources:
+- group: stable.dwk
+  kind: DummySite
+  version: v1
+version: "2"
