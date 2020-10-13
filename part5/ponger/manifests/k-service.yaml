@@ -1,0 +1,15 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ponger-svc
+  namespace: exercises-namespace
+spec:
+  template:
+    metadata:
+      name: ponger-svc-app
+    spec:
+      containers:
+        - image: sasumaki/ponger:69
+          envFrom:
+            - configMapRef:
+                name: postgres-config

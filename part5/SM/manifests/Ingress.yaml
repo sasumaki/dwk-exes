@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web-ingress
+  namespace: emojivoto
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: web-svc
+          servicePort: 80

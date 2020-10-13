@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ponger-dep
+  namespace: exercises-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ponger-app
+  template:
+    metadata:
+      labels:
+        app: ponger-app
+    spec:
+      containers:
+        - name: ponger-app
+          image: sasumaki/ponger:5321AD95-6792-4F60-84D3-DFAE0FAB1786
+          envFrom:
+          - configMapRef:
+              name: postgres-config
+          readinessProbe:
+            initialDelaySeconds: 10 # Initial delay until the readiness is tested
+            periodSeconds: 5 # How often to test
+            httpGet:
+               path: /health
+               port: 3000
